@@ -85,7 +85,7 @@ int organism::ID=0;
 
 void organism::show()
 {
-	cout<<"/n[$]ID"<<ID<<"/n[$]Temp"<<prefertemperature<<"/n[$]Light"<<preferlight<<"/n";
+	cout<<"/n[$]ID"<<thisID<<"/n[$]Temp"<<prefertemperature<<"/n[$]Light"<<preferlight<<"/n";
 }
 
 
