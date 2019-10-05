@@ -51,8 +51,8 @@ class organism
 		int health;
 		int LifeTicks;
 		int prefertemperature;
-        organism();
-        organism(organism*);
+                organism();
+                organism(organism*);
 		void turn();
 		void mutate();
 		void FindMyHealth();
@@ -168,8 +168,6 @@ void organism::move()
 
 	
 void organism::mutate()
-	
-	
 	{
 		organism* x;
 cout<<"LOL";
