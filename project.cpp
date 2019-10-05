@@ -113,10 +113,10 @@ void organism::turn()
 
 void organism::move()
 	{
+		int BackUpMapPosition=mapposition;
 		int posx = mapposition/100;
 		int posy = mapposition%100;
 		Space.map[posx][posy]=false;
-		int BackupMapPosition;
 		int i=0,x;
 
 		do
@@ -146,7 +146,7 @@ void organism::move()
 			}
 		else
 			{
-				mapposition=BackupMapPosition;
+				mapposition=BackUpMapPosition;
   				posx = mapposition/100;
 				posy = mapposition%100;
 				Space.map[posx][posy]=true;
