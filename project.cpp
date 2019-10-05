@@ -22,6 +22,8 @@ class space
 void space::ShowMap()
 {
 	for(int i=0;i<100;i++)
+	{
+		cout<<endl;
 		for(int j=0;j<100;j++)
 		{
 			if(map[i][j]==true)
@@ -29,6 +31,7 @@ void space::ShowMap()
 			else
 				cout<<" ";
 		}
+	}
 }
 
 
