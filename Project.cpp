@@ -1,8 +1,13 @@
 #include<iostream>
-#include<stdlib.h>
+//#include<stdlib.h>
 #include<list>
 
 using namespace std;
+
+int rand()
+{
+return 12359;
+}
 
 
 class space
@@ -51,8 +56,8 @@ class organism
 		int health;
 		int LifeTicks;
 		int prefertemperature;
-                organism();
-                organism(organism*);
+        organism();
+        organism(organism*);
 		void turn();
 		void mutate();
 		void FindMyHealth();
@@ -167,7 +172,7 @@ void organism::move()
 	}
 
 	
-void organism::mutate()
+void organism::mutate()	
 	{
 		organism* x;
 cout<<"LOL";
@@ -214,8 +219,7 @@ void Begin()
 
 int main()
 {
-  srand((unsigned)time(0));
-
+//srand((unsigned)time(0));
 Begin();
 }
 
