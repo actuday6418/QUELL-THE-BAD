@@ -120,14 +120,18 @@ void organism::move()
 		int i=0,x;
 
 		do
-		{
+		 {
 			x=rand()%101;
+			if(mapposition > 9800)
+				x=2;
+			else if(mapposition < 100)
+				x=37;
 		if(x>75)
 			mapposition+=1;
-		if(x>50)
+		else if(x>50)
 			mapposition-=1;
 
-		if(x>25)
+		else if(x>25)
 			mapposition+=4;
 		else
 			mapposition-=4;
@@ -175,9 +179,10 @@ void Begin()
 	        headptr = x;
 	        tailptr = x;
 		nowptr = x;
+		int l;
 		
 		unsigned long int Ticks=0;
-		while(Ticks<1000)
+		while(Ticks<100)
 		{
 			Ticks++;
 			
@@ -197,7 +202,8 @@ void Begin()
                                 delete tempptr;
 			}
 			nowptr=nowptr->node;
-			Space.ShowMap();	
+		//	Space.ShowMap();	
+			cout<<Ticks<<endl;
 		}
 			tailptr->show();
 		while(headptr!=NULL)
