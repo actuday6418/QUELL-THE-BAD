@@ -96,7 +96,7 @@ organism::organism(organism* parent)
 
 void organism::FindMyHealth()
 	{
-		health=100-LifeTicks-abs(prefertemperature-Space.temperaturemap[mapposition])-abs(preferlight-Space.lightmap[mapposition]);
+		health=60-LifeTicks-abs(prefertemperature-Space.temperaturemap[mapposition])-abs(preferlight-Space.lightmap[mapposition]);
 		if(health<=0)
 			health=-1;
 	}	
@@ -188,6 +188,7 @@ int Begin()
         list <organism>::  iterator y;
 		unsigned long int Ticks=0;
         x= life.begin();
+	list <organism> ::iterator t;
 		while(Ticks<10000)
 		{
 			Ticks++;
@@ -199,20 +200,20 @@ int Begin()
                 x=life.begin();
             if(x->health==-1)
                 {
-                 x=life.erase(x);cout<<"G";
+                 x=life.erase(x);
                 continue;
                 }
 		    x->turn();
 		    if(Ticks%5==0)
 			cout<<"Iterations done:"<<Ticks<<"	Organisms currently alive:"<<life.size()<<"\n";
+		    t=life.begin();
+                while(t!=life.end())
+                {
+        t->show();
+        ++t;
+        }
 		}
-
-		list <organism>:: iterator t;
-		while(t!=life.end())
-		{
-	t->show();
-	++t;	
-	}	
+		return 0;
 	}		
 
 int main()
