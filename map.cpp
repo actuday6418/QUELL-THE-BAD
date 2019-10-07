@@ -21,11 +21,12 @@ int randfunc()
        return(x);}
 	 	
 int main()
-{srand((unsigned) time(0));
+{
+srand((unsigned) time(0));
 
 	//init with zeroes
 	int temp[500];
-	long int n,s;
+	long unsigned int n,s;
 	n=400;
 	s=sqrt(n);
 	for(int i=0;i<n;i++)
@@ -101,8 +102,8 @@ for(int i=k+s;i<=n-s;i+=s)
 	//displaying part
 	for(int i=0;i<n;i+=s)
 	{for(int j=i;j<i+s;j++)
-		{cout<<temp[j]<<" ";}
-		cout<<"\n";
+		cout<<temp[j]<<" ";
+		cout<<endl;
 	}
 
 
