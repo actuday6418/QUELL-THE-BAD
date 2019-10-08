@@ -53,7 +53,7 @@ class organism
 		int prefertemperature;
         organism();
         organism(organism*);
-		void turn();
+		int turn();
 		void mutate();
 		void FindMyHealth();
 		void move();
@@ -96,7 +96,7 @@ organism::organism(organism* parent)
 
 void organism::FindMyHealth()
 	{
-		health=60-LifeTicks-abs(prefertemperature-Space.temperaturemap[mapposition])-abs(preferlight-Space.lightmap[mapposition]);
+		health=100-LifeTicks-abs(prefertemperature-Space.temperaturemap[mapposition])-abs(preferlight-Space.lightmap[mapposition]);
 		if(health<=0)
 			health=-1;
 	}	
@@ -108,13 +108,16 @@ void organism::show()
 }
 
 	
-void organism::turn()
+int organism::turn()
 	{   
 		move();
-		if(rand()%15==7)
-			{mutate();}
 		LifeTicks++;
 		FindMyHealth();
+		if(rand()%20==7)
+			{mutate();
+			return 1;
+			}
+		return 0;
 	}
 
 
@@ -134,8 +137,13 @@ void organism::move()
 				x=2;
 			else if(mapposition < 100)
 				x=37;
-		if(x>75)
+			i++;
+		if(x>90)
+			mapposition+=2;	
+		else if(x>75)
 			mapposition+=1;
+		else if(x>65)
+			mapposition-=2;
 		else if(x>50)
 			mapposition-=1;
 
@@ -143,9 +151,9 @@ void organism::move()
 			mapposition+=100;
 		else
 			mapposition-=100;
-		if(i==100)
+		if(i==10)
 			break;
-        posx = mapposition/100;
+       		 posx = mapposition/100;
 		posy = mapposition%100;
 		}
         while(mapposition==177||Space.map[posx][posy]==true);
@@ -172,7 +180,6 @@ void organism::mutate()
 		organism x;
                 x=this;
 		life.push_front(x);
-        x.turn();
 	}
 
 
@@ -184,14 +191,15 @@ int Begin()
             organism x;
             life.push_front(x);
         } 
+	    int y;
 	    list <organism>::  iterator x;
-        list <organism>::  iterator y;
 		unsigned long int Ticks=0;
         x= life.begin();
 	list <organism> ::iterator t;
-		while(Ticks<10000)
+		while(Ticks<10)
 		{
 			Ticks++;
+			cout<<"#";
 	    if(life.empty())
 	    {
 		    return 7;
@@ -203,13 +211,13 @@ int Begin()
                  x=life.erase(x);
                 continue;
                 }
-		    x->turn();
-		    if(Ticks%5==0)
+		if(x->turn())
 			cout<<"Iterations done:"<<Ticks<<"	Organisms currently alive:"<<life.size()<<"\n";
-		    t=life.begin();
+		
                 while(t!=life.end())
                 {
-        t->show();
+		t=life.begin();
+     //   t->show();
         ++t;
         }
 		}
@@ -220,8 +228,8 @@ int main()
 {
 srand((unsigned)time(0));
 while(true)
-	if(Begin()!=7)
-		break;
-
+{cout<<"&";	if(Begin()!=7)
+		break;}
+cout<<"END!";
 }
 
