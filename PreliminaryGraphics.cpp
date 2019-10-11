@@ -23,11 +23,19 @@ int main()
         }
         int place;
         // Display sequence : clear screen, draw circle and update display
-        window.clear();
+        window.clear(Color::White);
                 for(int i=0;i<500;i++)
                 for(int j=0;j<500;j++)
                 {
                 place = i*500+j;
                 line[place].position = Vector2f((float)i,(float)j);
                 if(am[i][j]==true)
-"m.cpp" 47L,
+                line[place].color = Color::White;
+                else 
+                line[place].color = Color::White;
+                }
+                window.draw(line);
+                window.display();
+}
+return 0;
+}
