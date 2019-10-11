@@ -54,7 +54,7 @@ class organism
         organism();
         organism(organism*);
 		int turn();
-		void mutate();
+		int mutate();
 		void FindMyHealth();
 		void move();
 		void show();
@@ -73,8 +73,8 @@ organism::organism()
       	int posx = mapposition/100;
 		int posy = mapposition%100;
 		Space.map[posx][posy]=true;
-		preferlight=5;
-		prefertemperature=5;
+		preferlight=50;
+		prefertemperature=50;
 		health=100;
 		}
 
@@ -96,7 +96,7 @@ organism::organism(organism* parent)
 
 void organism::FindMyHealth()
 	{
-		health=100-LifeTicks-abs(prefertemperature-Space.temperaturemap[mapposition])-abs(preferlight-Space.lightmap[mapposition]);
+		health=100-LifeTicks-5*abs(prefertemperature-Space.temperaturemap[mapposition])-5*abs(preferlight-Space.lightmap[mapposition]);
 		if(health<=0)
 			health=-1;
 	}	
@@ -114,8 +114,9 @@ int organism::turn()
 		LifeTicks++;
 		FindMyHealth();
 		if(rand()%20==7)
-			{mutate();
-			return 1;
+			{
+				if(mutate())
+				return 1;
 			}
 		return 0;
 	}
@@ -175,11 +176,17 @@ void organism::move()
 	}
 
 	
-void organism::mutate()	
+int organism::mutate()	
 	{
+		if(Space.map[1][76]==false)
+		{
 		organism x;
                 x=this;
 		life.push_front(x);
+		return 1;
+		}
+		else 
+			return 0;
 	}
 
 
@@ -187,19 +194,17 @@ void organism::mutate()
 
 int Begin()
 	{
-	    {
-            organism x;
-            life.push_front(x);
-        } 
+	    
+            organism m;
+            life.push_front(m); 
 	    int y;
-	    list <organism>::  iterator x;
+	    list <organism>::iterator x;
 		unsigned long int Ticks=0;
         x= life.begin();
 	list <organism> ::iterator t;
-		while(Ticks<10)
+		while(Ticks<1000)
 		{
 			Ticks++;
-			cout<<"#";
 	    if(life.empty())
 	    {
 		    return 7;
@@ -211,15 +216,15 @@ int Begin()
                  x=life.erase(x);
                 continue;
                 }
-		if(x->turn())
-			cout<<"Iterations done:"<<Ticks<<"	Organisms currently alive:"<<life.size()<<"\n";
-		
+	    x->turn();
+		t = life.begin();
                 while(t!=life.end())
                 {
-		t=life.begin();
-     //   t->show();
-        ++t;
-        }
+		  cout<<"Iterations "<<Ticks<<"   organisms alive  "<<life.size()<<"  ";
+        	  t->show();
+   		     ++t;
+		}
+		++x;
 		}
 		return 0;
 	}		
@@ -230,6 +235,6 @@ srand((unsigned)time(0));
 while(true)
 {cout<<"&";	if(Begin()!=7)
 		break;}
-cout<<"END!";
+cout<<"END!\n";
 }
 
