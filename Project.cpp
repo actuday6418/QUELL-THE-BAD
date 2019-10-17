@@ -70,7 +70,35 @@ class organism
 	};
 
 //list that holds the collection of organisms alive
-list <organism> life;
+class Life
+{
+	public:
+		list <organism> life;
+		int iterate();
+		//constructor for the initial organism
+		Life()
+		{
+			organism m;
+		        life.push_front(m);
+		}
+}life;
+
+int Life::iterate()
+{
+	    list <organism>::iterator x;
+            x= life.begin();
+	    while(x!=life.end())
+	    {
+		x->turn();
+		if(x->health==-1)
+			x=life.erase(x);
+		if(life.empty())
+			return 7;
+		++x;
+	    }
+	    return 0;
+}
+
 
 int organism::ID=0;
 
@@ -265,7 +293,7 @@ void organism::mutate(int def)
 		if(Flag)
 		{
 		Space.map[posx][posy]=true;
-		life.push_front(x);
+		life.life.push_front(x);
 
 		
 		}
@@ -279,45 +307,39 @@ void organism::mutate(int def)
 
 int Begin()
 	{
-	    //The initial organism
-            organism m;
-            life.push_front(m); 
-
 	    //SFML declarations
 	    RenderWindow window(VideoMode(1000, 1000), "EVOLUTION IN BITS AND BYTES");
-            VertexArray line(Points,250000SF
-	    Event event;
+            VertexArray line(Points,250000);
 	    int place;
+	    int Ticks=0,MaxTicks=10;
 
-	    list <organism>::iterator x;
-	    unsigned long int Ticks=0;
-            x= life.begin();
-  	    list <organism> ::iterator t;
     while (window.isOpen())
     {
-	    x=life.begin();
-
-	    //Main loop with Ticks as number of iterations
-	    while(Ticks<100)
-		{
-			if(x==life.end())
-				x=life.begin();
+	    Event event;
 			Ticks++;
-		  while (window.pollEvent(event))
+
+		//For closing the window 
+		while (window.pollEvent(event))
 		  {
-                    if (event.type == Event::Closed) 
-			    window.close();
+                    if (event.type == Event::EventType::Closed) 
+		    { 
+		      window.close();
+		      return 7;
+		    }
 		  }
-		  window.clear(Color::White);
-           		 if(life.empty())
-			 {
-				 cout<<"Terminated on drained ";
-				 return 7;
-			 }
-			 x->turn();
-			 if(x->health==-1)
-				 x=life.erase(x);
-		    
+
+		window.clear(Color::White);
+
+		if(Ticks<=MaxTicks)
+		{
+			if(life.iterate()==7)
+			{
+				window.close();
+				cout<<"Terminated on drained!";
+				return 7;
+			}
+		}
+    
                 //Code that sets the vector array values of color and position for each point on the map
                 for(int i=0;i<500;i++)
                 for(int j=0;j<500;j++)
@@ -333,9 +355,7 @@ int Begin()
 		//SFML draw and display
                 window.draw(line);
                 window.display();
-}
-
-			 }	
+    }	
 		return 0;
 	}		
 
