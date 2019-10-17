@@ -2,25 +2,31 @@
 #include<cstdlib>
 #include<list>
 #include<random>
+#include <SFML/Graphics.hpp>
 
+using namespace sf;
 using namespace std;
+
+//All references to this engine thing and distrobutions are for generating random nunumbe with the random library
+
 
 default_random_engine engine;
 
+//class implementing the environment variables and map
 class space
 	{
 	public:
-		bool map[100][100];
-		int lightmap[10000];
-		int temperaturemap[10000];
+		bool map[500][500];
+		int lightmap[250000];
+		int temperaturemap[250000];
 		space()
 		{
-			for(int i=0;i<100;i++)
-				for(int j=0;j<100;j++)
+			for(int i=0;i<500;i++)
+				for(int j=0;j<500;j++)
 					map[i][j]=false;
-            for(int i=0;i<10000;i++)
+            for(int i=0;i<250000;i++)
 	      	        lightmap[i]=70;
-            for(int i=0;i<10000;i++)
+            for(int i=0;i<250000;i++)
 	      	        temperaturemap[i]=40;
 		}
 		void ShowMap();
@@ -29,20 +35,20 @@ class space
 
 void space::ShowMap()
 {
-	for(int i=0;i<100;i++)
+	for(int i=0;i<500;i++)
 		{
         cout<<endl;
-            for(int j=0;j<100;j++)
+            for(int j=0;j<500;j++)
 		    {
 			    if(map[i][j]==true)
 			    	cout<<".";
 			    else
-			    	cout<<" ";
+			    	;
 		    }
         }
 }
 
-
+//class for orgamisms and their attributes
 class organism
 	{
 	public:
@@ -63,19 +69,21 @@ class organism
 		void show();
 	};
 
+//list that holds the collection of organisms alive
 list <organism> life;
 
 int organism::ID=0;
 
+//only the initial organism uses this constructor 
 organism::organism()
 		{
 		thisID=ID;
 		ID++;
-		mapposition=177;
+		mapposition=1777;
 		LifeTicks=0;
 		parentID=-1;
-        	int posx = mapposition/100;
-		int posy = mapposition%100;
+        	int posx = mapposition/500;
+		int posy = mapposition%500;
 		Space.map[posx][posy]=true;
 		preferlight=50;
 		prefertemperature=50;
@@ -89,31 +97,32 @@ void organism::FindMyHealth()
 			health=-1;
 	}	
 
-
+//Not in use right now
 void organism::show()
 {
 	cout<<"\n[$]ID"<<thisID<<"  [$]Parent ID"<<parentID<<" [$]Life_Ticks"<<LifeTicks<<" [$]Temp"<<prefertemperature<<" [$]Light"<<preferlight<<" [$]Health"<<health<<" [$]Map_Position"<<mapposition<<"\n";
 }
 
-	void organism::turn()
-	{   
+//Function called everytime it is an organism's turn to make a move and/or mutate
+void organism::turn()
+{   
 		move();
 		LifeTicks++;	
 		FindMyHealth();
-		int u=20;
+		int u=10;
 		uniform_int_distribution <int> dist(0,u);
 		{
 			if(dist(engine)==0)
 			{	mutate(0);}
 		}
-	}
+}
 
-
+//Function that moves an organism from one point on the map to another
 void organism::move()
 	{
 		int BackUpMapPosition=mapposition;
-		int posx = mapposition/100;
- 		int posy = mapposition%100;
+		int posx = mapposition/500;
+ 		int posy = mapposition%500;
 		Space.map[posx][posy]=false;
 		int i=0,x;
 		uniform_int_distribution <int> distro(0,100);
@@ -121,49 +130,50 @@ void organism::move()
 		do
 		 {
 			x=distro(engine);
- 			if(mapposition > 9900)
+ 			if(mapposition > 249500)
 				x=2;
- 			else if(mapposition < 100)
+ 			else if(mapposition < 500)
 				x=37;
 			i++;
 		if(x>90)
-			mapposition+=2;	
+			mapposition+=4;	
 		else if(x>75)
-			mapposition+=1;
+			mapposition+=3;
 		else if(x>65)
-			mapposition-=2;
+			mapposition-=4;
 		else if(x>50)
-			mapposition-=1;
+			mapposition-=3;
 
 		else if(x>25)
-			mapposition+=100;
+			mapposition+=1000;
 		else
-			mapposition-=100;
+			mapposition-=1000;
 		if(i==10)
 			break;
-       		posx = mapposition/100;
-		posy = mapposition%100;
+       		posx = mapposition/500;
+		posy = mapposition%500;
 		}
         while(Space.map[posx][posy]==true);
         
 		if(i!=10)
 			{
-				posx = mapposition/100;
-				posy = mapposition%100;
+				posx = mapposition/500;
+				posy = mapposition%500;
 				Space.map[posx][posy]=true;
 			}
 		else
 			{
 				mapposition=BackUpMapPosition;
-  				posx = mapposition/100;
-				posy = mapposition%100;
+  				posx = mapposition/500;
+				posy = mapposition%500;
 				Space.map[posx][posy]=true;
 			}
 
 	}
 
-	void organism::mutate(int def)	
-	{
+//Function called from turn each time the organism has to mutate
+void organism::mutate(int def)	
+{
 		organism x;
 		int y=x.thisID;
                 x=*this;
@@ -177,8 +187,8 @@ void organism::move()
 			x.preferlight += 2*di(engine);
 		else if(y==2)
 			x.prefertemperature +=2*di(engine);
-		int posx = mapposition/100;
-		int posy = mapposition%100;
+		int posx = mapposition/500;
+		int posy = mapposition%500;
 		bool Flag=false;
 		y=0;
 		uniform_int_distribution <int> distro(0,7);
@@ -248,8 +258,8 @@ void organism::move()
 					}}
 					
 			y++;
-			x.mapposition = posx*100+posy;
-			if(x.mapposition>10000||x.mapposition<0)
+			x.mapposition = posx*500+posy;
+			if(x.mapposition>250000||x.mapposition<0)
 				Flag=false;
 		}
 		if(Flag)
@@ -263,57 +273,68 @@ void organism::move()
 		{
 			organism::ID-=1;
 		}
-	}
-
+}
 
 
 
 int Begin()
 	{
-	    
+	    //The initial organism
             organism m;
             life.push_front(m); 
-	    int y=0,z;
+
+	    //SFML declarations
+	    RenderWindow window(VideoMode(1000, 1000), "EVOLUTION IN BITS AND BYTES");
+            VertexArray line(Points,250000SF
+	    Event event;
+	    int place;
+
 	    list <organism>::iterator x;
 	    unsigned long int Ticks=0;
             x= life.begin();
   	    list <organism> ::iterator t;
+    while (window.isOpen())
+    {
+	    x=life.begin();
 
-	    while(Ticks<1000)
+	    //Main loop with Ticks as number of iterations
+	    while(Ticks<100)
 		{
+			if(x==life.end())
+				x=life.begin();
 			Ticks++;
-		//	cin>>y;
-	    		if(life.empty())
-	   			 {
-					cout<<"Terminated on drain";
-		  			  return 7;
-	   			 }
-           		 
-            			 x=life.begin();
-				 while(x!=life.end())
-				 {
-           			 if(x->health==-1)
-               			 {
-              				   x=life.erase(x);
-              				   continue;
-               			 }
-				 x->turn();
-				 }
-		       	 t = life.begin();
-			 z=y=0;
-               		 while(t!=life.end())
-               		 {	
-			 y+=t->prefertemperature;	 
-			 z+=t->preferlight;
-				 {
-			//	  cout<<"Iterations "<<Ticks<<"   organisms alive  "<<life.size()<<"  ";
-        			  t->show();
-				 }
-   		    		  ++t;
+		  while (window.pollEvent(event))
+		  {
+                    if (event.type == Event::Closed) 
+			    window.close();
+		  }
+		  window.clear(Color::White);
+           		 if(life.empty())
+			 {
+				 cout<<"Terminated on drained ";
+				 return 7;
 			 }
+			 x->turn();
+			 if(x->health==-1)
+				 x=life.erase(x);
+		    
+                //Code that sets the vector array values of color and position for each point on the map
+                for(int i=0;i<500;i++)
+                for(int j=0;j<500;j++)
+                {
+                place = i*500+j;
+                line[place].position = Vector2f((float)i,(float)j);
+                if(Space.map[i][j]==true)
+                line[place].color = Color::Red;
+                else 
+                line[place].color = Color::White;
+                }
 
-			if(life.size())
-		 cout<<"Iterations "<<Ticks<<"  PT"<<y/life.size()<<"  PL"<<z/life.size()<<" Size"<<life.size()<<"\n";
+		//SFML draw and display
+                window.draw(line);
+                window.display();
+}
+
 			 }	
 		return 0;
 	}		
@@ -322,8 +343,8 @@ int Begin()
 
 int main()
 {
+	//seeding the random engine
 	engine.seed(time(0));
-	cout<<"&";Begin();
-cout<<"END!\n";
+	Begin();
 }
 
