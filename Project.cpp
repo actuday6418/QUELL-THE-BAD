@@ -7,7 +7,7 @@
 using namespace sf;
 using namespace std;
 
-//All references to this engine thing and distrobutions are for generating random nunumbe with the random library
+//All references to this engine thing and distributions are for generating random numbers with the random library
 
 
 default_random_engine engine;
