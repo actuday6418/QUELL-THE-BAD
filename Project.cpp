@@ -2,9 +2,7 @@
 #include<cstdlib>
 #include<list>
 #include<random>
-#include <SFML/Graphics.hpp>
 
-using namespace sf;
 using namespace std;
 
 //All references to this engine thing and distributions are for generating random numbers with the random library
@@ -307,54 +305,21 @@ void organism::mutate(int def)
 
 int Begin()
 	{
-	    //SFML declarations
-	    RenderWindow window(VideoMode(1000, 1000), "EVOLUTION IN BITS AND BYTES");
-            VertexArray line(Points,250000);
-	    int place;
+
 	    int Ticks=0,MaxTicks=10;
 
-    while (window.isOpen())
+    while (1)
     {
-	    Event event;
+
 			Ticks++;
-
-		//For closing the window 
-		while (window.pollEvent(event))
-		  {
-                    if (event.type == Event::EventType::Closed) 
-		    { 
-		      window.close();
-		      return 7;
-		    }
-		  }
-
-		window.clear(Color::White);
-
 		if(Ticks<=MaxTicks)
 		{
 			if(life.iterate()==7)
 			{
-				window.close();
 				cout<<"Terminated on drained!";
 				return 7;
 			}
 		}
-    
-                //Code that sets the vector array values of color and position for each point on the map
-                for(int i=0;i<500;i++)
-                for(int j=0;j<500;j++)
-                {
-                place = i*500+j;
-                line[place].position = Vector2f((float)i,(float)j);
-                if(Space.map[i][j]==true)
-                line[place].color = Color::Red;
-                else 
-                line[place].color = Color::White;
-                }
-
-		//SFML draw and display
-                window.draw(line);
-                window.display();
     }	
 		return 0;
 	}		
