@@ -4,7 +4,6 @@
 #include<random>
 #include <SFML/Graphics.hpp>
 
-using namespace sf;
 using namespace std;
 
 //All references to this engine thing and distributions are for generating random numbers with the random library
@@ -90,6 +89,7 @@ int Life::iterate()
 	    while(x!=life.end())
 	    {
 		x->turn();
+	//	x->show();
 		if(x->health==-1)
 			x=life.erase(x);
 		if(life.empty())
@@ -141,7 +141,7 @@ void organism::turn()
 		uniform_int_distribution <int> dist(0,u);
 		{
 			if(dist(engine)==0)
-			{	mutate(0);}
+			{cout<<"Y";	mutate(0);}
 		}
 }
 
@@ -157,25 +157,28 @@ void organism::move()
 		
 		do
 		 {
+			 posx = BackUpMapPosition/500;
+			 posy = BackUpMapPosition%500;
+			 mapposition = BackUpMapPosition;
 			x=distro(engine);
  			if(mapposition > 249500)
 				x=2;
  			else if(mapposition < 500)
 				x=37;
 			i++;
-		if(x>90)
-			mapposition+=4;	
-		else if(x>75)
-			mapposition+=3;
-		else if(x>65)
-			mapposition-=4;
-		else if(x>50)
-			mapposition-=3;
+//		if(x>90)
+//			mapposition+=4;	
+		 if(x>75&&!(BackUpMapPosition>249998))
+			mapposition+=1;
+//		else if(x>65)
+//			mapposition-=4;
+		else if(x>50&&!(BackUpMapPosition<1))
+			mapposition-=1;
 
-		else if(x>25)
-			mapposition+=1000;
-		else
-			mapposition-=1000;
+		else if(x>25&&!(BackUpMapPosition>249500))
+			mapposition+=500;
+		else if(!(BackUpMapPosition<500))
+			mapposition-=500;
 		if(i==10)
 			break;
        		posx = mapposition/500;
@@ -308,53 +311,53 @@ void organism::mutate(int def)
 int Begin()
 	{
 	    //SFML declarations
-	    RenderWindow window(VideoMode(1000, 1000), "EVOLUTION IN BITS AND BYTES");
-            VertexArray line(Points,250000);
+	    sf::RenderWindow window(sf::VideoMode(1000, 1000), "EVOLUTION IN BITS AND BYTES");
+	    sf::VertexArray line(sf::Points,250000);
 	    int place;
-	    int Ticks=0,MaxTicks=10;
+	    int Ticks=0,MaxTicks=100;
 
     while (window.isOpen())
     {
-	    Event event;
+	    sf::Event event;
 			Ticks++;
 
 		//For closing the window 
 		while (window.pollEvent(event))
 		  {
-                    if (event.type == Event::EventType::Closed) 
+                    if (event.type == sf::Event::EventType::Closed) 
 		    { 
 		      window.close();
 		      return 7;
 		    }
 		  }
 
-		window.clear(Color::White);
+		window.clear(sf::Color::White);
 
-		if(Ticks<=MaxTicks)
-		{
 			if(life.iterate()==7)
 			{
-				window.close();
+			//	window.close();
 				cout<<"Terminated on drained!";
-				return 7;
+			//	return 7;
 			}
-		}
+		
     
                 //Code that sets the vector array values of color and position for each point on the map
                 for(int i=0;i<500;i++)
                 for(int j=0;j<500;j++)
                 {
                 place = i*500+j;
-                line[place].position = Vector2f((float)i,(float)j);
+                line[place].position = sf::Vector2f((float)i,(float)j);
                 if(Space.map[i][j]==true)
-                line[place].color = Color::Red;
+                line[place].color = sf::Color::Red;
                 else 
-                line[place].color = Color::White;
+                line[place].color = sf::Color::White;
                 }
 
 		//SFML draw and display
                 window.draw(line);
                 window.display();
+		if(Ticks==MaxTicks)
+			break;
     }	
 		return 0;
 	}		
