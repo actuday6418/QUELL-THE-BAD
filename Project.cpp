@@ -91,7 +91,12 @@ int Life::iterate()
 		x->turn();
 	//	x->show();
 		if(x->health==-1)
+		{
+			int posx = x->mapposition/500;
+			int posy = x->mapposition%500;
+			Space.map[posx][posy]=false;
 			x=life.erase(x);
+		}
 		if(life.empty())
 			return 7;
 		++x;
@@ -120,7 +125,7 @@ organism::organism()
 
 void organism::FindMyHealth()
 	{
-		health=100-LifeTicks-abs(prefertemperature-Space.temperaturemap[mapposition])-abs(preferlight-Space.lightmap[mapposition]);
+		health=60-LifeTicks-abs(prefertemperature-Space.temperaturemap[mapposition])-abs(preferlight-Space.lightmap[mapposition]);
 		if(health<=0)
 			health=-1;
 	}	
@@ -141,7 +146,7 @@ void organism::turn()
 		uniform_int_distribution <int> dist(0,u);
 		{
 			if(dist(engine)==0)
-			{cout<<"Y";	mutate(0);}
+			mutate(0);
 		}
 }
 
@@ -297,7 +302,6 @@ void organism::mutate(int def)
 		{
 		Space.map[posx][posy]=true;
 		life.life.push_front(x);
-
 		
 		}
 		else
@@ -314,11 +318,10 @@ int Begin()
 	    sf::RenderWindow window(sf::VideoMode(1000, 1000), "EVOLUTION IN BITS AND BYTES");
 	    sf::VertexArray line(sf::Points,250000);
 	    int place;
-	    int Ticks=0,MaxTicks=100;
-
+	    int Ticks=0,MaxTicks=1000;
+     	    sf::Event event;
     while (window.isOpen())
     {
-	    sf::Event event;
 			Ticks++;
 
 		//For closing the window 
@@ -358,7 +361,24 @@ int Begin()
                 window.display();
 		if(Ticks==MaxTicks)
 			break;
-    }	
+    }
+    life.life.end()->show();
+		while(true)
+		{
+
+		//For closing the window 
+		while (window.pollEvent(event))
+		  {
+                    if (event.type == sf::Event::EventType::Closed) 
+		    { 
+		      window.close();
+		      return 7;
+		    }
+		  }
+
+		}
+
+	
 		return 0;
 	}		
 
