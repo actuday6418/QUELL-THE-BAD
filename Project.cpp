@@ -89,7 +89,6 @@ int Life::iterate()
 	    while(x!=life.end())
 	    {
 		x->turn();
-	//	x->show();
 		if(x->health==-1)
 		{
 			int posx = x->mapposition/500;
@@ -125,7 +124,7 @@ organism::organism()
 
 void organism::FindMyHealth()
 	{
-		health=60-LifeTicks-abs(prefertemperature-Space.temperaturemap[mapposition])-abs(preferlight-Space.lightmap[mapposition]);
+		health=50-LifeTicks-abs(prefertemperature-Space.temperaturemap[mapposition])-abs(preferlight-Space.lightmap[mapposition]);
 		if(health<=0)
 			health=-1;
 	}	
@@ -318,7 +317,7 @@ int Begin()
 	    sf::RenderWindow window(sf::VideoMode(1000, 1000), "EVOLUTION IN BITS AND BYTES");
 	    sf::VertexArray line(sf::Points,250000);
 	    int place;
-	    int Ticks=0,MaxTicks=1000;
+	    int Ticks=0,MaxTicks=300;
      	    sf::Event event;
     while (window.isOpen())
     {
@@ -362,7 +361,10 @@ int Begin()
 		if(Ticks==MaxTicks)
 			break;
     }
-    life.life.end()->show();
+    list <organism>:: iterator x;
+    x = life.life.end();
+   x++;
+   x->show();
 		while(true)
 		{
 
